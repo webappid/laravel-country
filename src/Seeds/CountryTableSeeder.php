@@ -30,7 +30,12 @@ class CountryTableSeeder extends Seeder
                 $addCountryParam->setName($data['name']);
                 $addCountryParam->setWikipediaLink($data['wikipedia_link']);
                 $addCountryParam->setKeywords($data['keywords']);
-                $this->container->call([$countryRepository, 'addCountry'], ['addCountryParam' => $addCountryParam]);
+                $result = $this->container->call([$countryRepository, 'getCountryByCode'], ['code' => $data['code']]);
+                if ($result == null) {
+                    $this->container->call([$countryRepository, 'addCountry'], ['addCountryParam' => $addCountryParam]);
+                } else {
+                    $this->container->call([$countryRepository, 'updateCountryByCode'], ['addCountryParam' => $addCountryParam, 'code' => $addCountryParam->getCode()]);
+                }
             }
         }
         DB::commit();
