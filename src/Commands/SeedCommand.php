@@ -44,6 +44,6 @@ class SeedCommand extends Command
     public function handle()
     {
         \Artisan::call('db:seed', ['--class' => 'WebAppId\Country\Seeds\DatabaseSeeder']);
-        $this->info('Seeded: WebAppId\Country\Seeds\UserSeeder');
+        $this->info('Seeded: WebAppId\Country\Seeds\CountrySeeder');
     }
 }
