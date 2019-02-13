@@ -12,6 +12,11 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
+    public function register()
+    {
+        $this->commands(\WebAppId\Country\Commands\SeedCommand::class);
+    }
+    
     public function boot()
     {
         if ($this->isLaravel53AndUp()) {

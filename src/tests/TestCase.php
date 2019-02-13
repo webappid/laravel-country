@@ -31,7 +31,7 @@ abstract class TestCase extends BaseTestCase
         $this->loadMigrationsFrom([
             '--realpath' => realpath(__DIR__ . '/../src/migrations'),
         ]);
-//        $this->artisan('webappid:country:seed');
+        $this->artisan('webappid:country:seed');
         
     }
     

@@ -10,7 +10,8 @@ use \Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCountriesTable extends Migration{
+class CreateCountriesTable extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -22,8 +23,9 @@ class CreateCountriesTable extends Migration{
             $table->increments('id');
             $table->string('code', 100)
                 ->unique();
-            $table->string('name',100);
-            $table->string('continent', 100);
+            $table->string('name', 100);
+            $table->string('continent', 100)
+                ->nullable(true);
             $table->string('wikipedia_link', 150);
             $table->string('keywords', 100);
             $table->timestamps();
