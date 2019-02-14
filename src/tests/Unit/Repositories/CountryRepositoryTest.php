@@ -63,7 +63,7 @@ class CountryRepositoryTest extends TestCase
     {
         $random = $this->getFaker()->numberBetween(20, 50);
         for ($i = 0; $i < $random; $i++) {
-            $dummy[$i] = $this->createDummy($this->getFaker()->randomNumber() + $i);
+            $dummy[$i] = $this->createDummy($i);
             $result[$i] = $this->createData($dummy[$i]);
         }
         
