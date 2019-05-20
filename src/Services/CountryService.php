@@ -13,7 +13,7 @@ use Illuminate\Container\Container;
 use WebAppId\Country\Models\Country;
 use WebAppId\Country\Repositories\CountryRepository;
 use WebAppId\Country\Responses\CountrySearchResponse;
-use WebAppId\Country\Services\Params\AddCountryParam;
+use WebAppId\Country\Services\Params\CountryParam;
 
 /**
  * Class CountryService
@@ -29,14 +29,14 @@ class CountryService
     }
     
     /**
-     * @param AddCountryParam $addCountryParam
+     * @param CountryParam $countryParam
      * @param CountryRepository $countryRepository
      * @return Country|null
      */
-    public function addCountry(AddCountryParam $addCountryParam,
-                               CountryRepository $countryRepository): ?Country
+    public function store(CountryParam $countryParam,
+                          CountryRepository $countryRepository): ?Country
     {
-        return $this->container->call([$countryRepository, 'addCountry'], ['addCountryParam' => $addCountryParam]);
+        return $this->container->call([$countryRepository, 'store'], ['countryParam' => $countryParam]);
     }
     
     /**
@@ -44,10 +44,10 @@ class CountryService
      * @param CountryRepository $countryRepository
      * @return object|null
      */
-    public function getCountryByCode(string $code,
+    public function getByCode(string $code,
                                      CountryRepository $countryRepository): ?object
     {
-        return $this->container->call([$countryRepository, 'getCountryByCode'], ['code' => $code]);
+        return $this->container->call([$countryRepository, 'getByCode'], ['code' => $code]);
     }
     
     /**
@@ -56,11 +56,11 @@ class CountryService
      * @param CountrySearchResponse $countrySearchResponse
      * @return object|null
      */
-    public function getCountryLike(string $q,
+    public function getLike(string $q,
                                    CountryRepository $countryRepository,
                                    CountrySearchResponse $countrySearchResponse): ?CountrySearchResponse
     {
-        $result = $this->container->call([$countryRepository, 'getCountryLike'], ['search' => $q]);
+        $result = $this->container->call([$countryRepository, 'getLike'], ['search' => $q]);
         if (count($result) == 0) {
             $countrySearchResponse->setStatus(false);
             $countrySearchResponse->setMessage('Data Not Found');
@@ -74,14 +74,14 @@ class CountryService
     
     /**
      * @param string $code
-     * @param AddCountryParam $addCountryParam
+     * @param CountryParam $countryParam
      * @param CountryRepository $countryRepository
      * @return Country|null
      */
     public function updateCountry(string $code,
-                                  AddCountryParam $addCountryParam,
+                                  CountryParam $countryParam,
                                   CountryRepository $countryRepository): ?Country
     {
-        return $this->container->call([$countryRepository, 'updateCountryByCode'], ['addCountryParam' => $addCountryParam, 'code' => $code]);
+        return $this->container->call([$countryRepository, 'updateByCode'], ['addCountryParam' => $countryParam, 'code' => $code]);
     }
 }

@@ -8,7 +8,13 @@
 
 namespace WebAppId\Country\Responses;
 
+use WebAppId\DDD\Responses\AbstractResponse;
 
+/**
+ * @author: Dyan Galih<dyan.galih@gmail.com> https://dyangalih.com
+ * Class CountrySearchResponse
+ * @package WebAppId\Country\Responses
+ */
 class CountrySearchResponse extends AbstractResponse
 {
     private $country;

@@ -8,13 +8,40 @@
 
 namespace WebAppId\Country\Services\Params;
 
-class AddCountryParam
+/**
+ * @author: Dyan Galih<dyan.galih@gmail.com> https://dyangalih.com
+ * Class CountryParam
+ * @package WebAppId\Country\Services\Params
+ */
+class CountryParam
 {
+    /**
+     * @var integer
+     */
     private $id;
+    /**
+     * @var string
+     */
     private $code;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var integer
+     */
+    private $currency_id;
+    /**
+     * @var string
+     */
     private $continent;
+    /**
+     * @var string
+     */
     private $wikipedia_link;
+    /**
+     * @var string
+     */
     private $keywords;
     
     /**
@@ -111,5 +138,21 @@ class AddCountryParam
     public function setKeywords(string $keywords): void
     {
         $this->keywords = $keywords;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getCurrencyId(): int
+    {
+        return $this->currency_id;
+    }
+    
+    /**
+     * @param int $currency_id
+     */
+    public function setCurrencyId(int $currency_id): void
+    {
+        $this->currency_id = $currency_id;
     }
 }

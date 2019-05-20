@@ -8,45 +8,40 @@
 
 namespace WebAppId\Country\Repositories;
 
-use Illuminate\Container\Container;
 use Illuminate\Database\QueryException;
+use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\Country\Models\Country;
-use WebAppId\Country\Services\Params\AddCountryParam;
+use WebAppId\Country\Repositories\Contracts\CountryRepositoryContract;
+use WebAppId\Country\Services\Params\CountryParam;
 
 /**
  * Class CountryRepository
  * @package WebAppId\Country\Repositories
  */
-class CountryRepository
+class CountryRepository implements CountryRepositoryContract
 {
-    private $container;
-    
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
     
     /**
-     * @param AddCountryParam $addCountryParam
+     * @param CountryParam $countryParam
      * @param Country $country
      * @return Country|null
      */
-    public function addCountry(AddCountryParam $addCountryParam,
-                               Country $country): ?Country
+    public function store(CountryParam $countryParam,
+                          Country $country): ?Country
     {
         try {
-            if ($addCountryParam->getId() != null) {
-                $country->id = $addCountryParam->getId();
+            if ($countryParam->getId() != null) {
+                $country->id = $countryParam->getId();
             }
-            $country->code = $addCountryParam->getCode();
-            $country->name = $addCountryParam->getName();
-            $country->continent = $addCountryParam->getContinent();
-            $country->wikipedia_link = $addCountryParam->getWikipediaLink();
-            $country->keywords = $addCountryParam->getKeywords();
+            $country->code = $countryParam->getCode();
+            $country->name = $countryParam->getName();
+            $country->currency_id = $countryParam->getCurrencyId();
+            $country->continent = $countryParam->getContinent();
+            $country->wikipedia_link = $countryParam->getWikipediaLink();
+            $country->keywords = $countryParam->getKeywords();
             $country->save();
             return $country;
         } catch (QueryException $queryException) {
-            dd($queryException);
             report($queryException);
             return null;
         }
@@ -58,9 +53,9 @@ class CountryRepository
      * @param int $paging
      * @return object|null
      */
-    public function getCountryLike(string $search,
+    public function getLike(string $search,
                                    Country $country,
-                                   int $paging = 12): ?object
+                                   int $paging = 12): LengthAwarePaginator
     {
         return $country
             ->where('code', 'LIKE', '%' . $search . '%')
@@ -71,32 +66,33 @@ class CountryRepository
     /**
      * @param string $code
      * @param Country $country
-     * @return object|null
+     * @return Country|null
      */
-    public function getCountryByCode(string $code,
-                                     Country $country): ?object
+    public function getByCode(string $code,
+                                     Country $country): ?Country
     {
         return $country->where('code', $code)->first();
     }
     
     /**
-     * @param AddCountryParam $addCountryParam
+     * @param CountryParam $countryParam
      * @param string $code
      * @param Country $country
      * @return Country|null
      */
-    public function updateCountryByCode(AddCountryParam $addCountryParam,
-                                        string $code,
-                                        Country $country): ?Country
+    public function updateByCode(CountryParam $countryParam,
+                                 string $code,
+                                 Country $country): ?Country
     {
-        $result = $this->getCountryByCode($code, $country);
+        $result = $this->getByCode($code, $country);
         if ($result != null) {
             try {
-                $result->code = $addCountryParam->getCode();
-                $result->name = $addCountryParam->getName();
-                $result->continent = $addCountryParam->getContinent();
-                $result->wikipedia_link = $addCountryParam->getWikipediaLink();
-                $result->keywords = $addCountryParam->getKeywords();
+                $result->code = $countryParam->getCode();
+                $result->name = $countryParam->getName();
+                $result->currency_id = $countryParam->getCurrencyId();
+                $result->continent = $countryParam->getContinent();
+                $result->wikipedia_link = $countryParam->getWikipediaLink();
+                $result->keywords = $countryParam->getKeywords();
                 $result->save();
                 return $result;
             } catch (QueryException $queryException) {
