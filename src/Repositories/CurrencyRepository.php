@@ -40,7 +40,6 @@ class CurrencyRepository implements CurrencyRepositoryContract
             return $currency;
         } catch (QueryException $queryException) {
             report($queryException);
-            dd($queryException);
             return null;
         }
     }

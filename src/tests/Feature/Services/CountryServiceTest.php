@@ -9,6 +9,7 @@
 namespace WebAppId\Country\Tests\Feature\Services;
 
 use WebAppId\Country\Models\Country;
+use WebAppId\Country\Responses\CountryResponse;
 use WebAppId\Country\Services\CountryService;
 use WebAppId\Country\Tests\TestCase;
 use WebAppId\Country\Tests\Unit\Repositories\CountryRepositoryTest;
@@ -65,17 +66,20 @@ class CountryServiceTest extends TestCase
     /**
      * @return Country|null
      */
-    public function testAddCountry(): ?Country
+    public function testAddCountry(): ?CountryResponse
     {
         $dummy = $this->countryRepositoryTest()->createDummy($this->getFaker()->numberBetween(1, 500000));
         $result = $this->getContainer()->call([$this->countryService(), 'store'], ['countryParam' => $dummy]);
+        
+        self::assertTrue($result->isStatus());
+        
         self::assertNotEquals(null, $result);
-        self::assertEquals($dummy->getId(), $result->id);
-        self::assertEquals($dummy->getCode(), $result->code);
-        self::assertEquals($dummy->getName(), $result->name);
-        self::assertEquals($dummy->getContinent(), $result->continent);
-        self::assertEquals($dummy->getWikipediaLink(), $result->wikipedia_link);
-        self::assertEquals($dummy->getKeywords(), $result->keywords);
+        self::assertEquals($dummy->getId(), $result->getCountry()->id);
+        self::assertEquals($dummy->getCode(), $result->getCountry()->code);
+        self::assertEquals($dummy->getName(), $result->getCountry()->name);
+        self::assertEquals($dummy->getContinent(), $result->getCountry()->continent);
+        self::assertEquals($dummy->getWikipediaLink(), $result->getCountry()->wikipedia_link);
+        self::assertEquals($dummy->getKeywords(), $result->getCountry()->keywords);
         return $result;
     }
     
@@ -87,7 +91,7 @@ class CountryServiceTest extends TestCase
         $bulkData = $this->createBulkCountry();
         
         $randomNumber = $this->getFaker()->numberBetween(0, count($bulkData) - 1);
-        $resultSearch = $this->getContainer()->call([$this->countryService(), 'getByCode'], ['code' => $bulkData[$randomNumber]['code']]);
+        $resultSearch = $this->getContainer()->call([$this->countryService(), 'getByCode'], ['code' => $bulkData[$randomNumber]->getCountry()->code]);
         self::assertNotEquals(null, $resultSearch);
     }
     
@@ -109,7 +113,7 @@ class CountryServiceTest extends TestCase
         
         $newRandomKey = $this->getFaker()->numberBetween(0, count($bulkData));
         
-        $newSearchResult = $this->getContainer()->call([$this->countryService(), 'getLike'], ['q' => $bulkData[$newRandomKey]['code']]);
+        $newSearchResult = $this->getContainer()->call([$this->countryService(), 'getLike'], ['q' => $bulkData[$newRandomKey]->getCountry()->code]);
         
         self::assertEquals(1, count($newSearchResult->getCountry()));
     }
@@ -121,15 +125,16 @@ class CountryServiceTest extends TestCase
     {
         $result = $this->testAddCountry();
         $newDummy = $this->countryRepositoryTest()->createDummy($this->getFaker()->randomNumber());
-        $newDummy->setCode($result->code);
-        $resultUpdate = $this->getContainer()->call([$this->countryService(), 'updateCountry'], ['code' => $result->code, 'countryParam' => $newDummy]);
-        self::assertNotEquals(null, $resultUpdate);
-        self::assertEquals($result->id, $resultUpdate->id);
-        self::assertEquals($newDummy->getCode(), $resultUpdate->code);
-        self::assertEquals($newDummy->getName(), $resultUpdate->name);
-        self::assertEquals($newDummy->getContinent(), $resultUpdate->continent);
-        self::assertEquals($newDummy->getWikipediaLink(), $resultUpdate->wikipedia_link);
-        self::assertEquals($newDummy->getKeywords(), $resultUpdate->keywords);
+        $newDummy->setCode($result->getCountry()->code);
+       
+        $resultUpdate = $this->getContainer()->call([$this->countryService(), 'updateCountry'], ['code' => $result->getCountry()->code, 'countryParam' => $newDummy]);
+        self::assertTrue($resultUpdate->isStatus());
+        self::assertEquals($result->getCountry()->id, $resultUpdate->getCountry()->id);
+        self::assertEquals($newDummy->getCode(), $resultUpdate->getCountry()->code);
+        self::assertEquals($newDummy->getName(), $resultUpdate->getCountry()->name);
+        self::assertEquals($newDummy->getContinent(), $resultUpdate->getCountry()->continent);
+        self::assertEquals($newDummy->getWikipediaLink(), $resultUpdate->getCountry()->wikipedia_link);
+        self::assertEquals($newDummy->getKeywords(), $resultUpdate->getCountry()->keywords);
     }
     
 }

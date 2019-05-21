@@ -5,7 +5,7 @@
  * Time: 21:03
  */
 
-namespace Tests\Unit\Repositories;
+namespace WebAppId\Country\Tests\Unit\Repositories;
 
 use WebAppId\Country\Repositories\CurrencyRepository;
 use WebAppId\Country\Services\Params\CurrencyParam;
@@ -36,7 +36,7 @@ class CurrencyRepositoryTest extends TestCase
     public function dummy(): CurrencyParam
     {
         $currencyParam = new CurrencyParam();
-        $currencyParam->setId($this->getFaker()->randomNumber());
+        $currencyParam->setId($this->getFaker()->numberBetween(10000, 20000));
         $currencyParam->setCode($this->getFaker()->text(5));
         $currencyParam->setName($this->getFaker()->text(50));
         return $currencyParam;

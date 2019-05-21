@@ -1,42 +1,42 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: dyangalih
- * Date: 2019-02-13
- * Time: 16:25
+ * Author: galih
+ * Date: 2019-05-21
+ * Time: 04:41
  */
 
 namespace WebAppId\Country\Responses;
+
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use WebAppId\DDD\Responses\AbstractResponse;
 
 /**
  * @author: Dyan Galih<dyan.galih@gmail.com> https://dyangalih.com
- * Class CountrySearchResponse
+ * Class CurrencySearchResponse
  * @package WebAppId\Country\Responses
  */
-class CountrySearchResponse extends AbstractResponse
+class CurrencySearchResponse extends AbstractResponse
 {
     /**
      * @var LengthAwarePaginator
      */
-    private $country;
+    private $currency;
     
     /**
      * @return LengthAwarePaginator
      */
-    public function getCountry():LengthAwarePaginator
+    public function getCurrency(): LengthAwarePaginator
     {
-        return $this->country;
+        return $this->currency;
     }
     
     /**
-     * @param LengthAwarePaginator $country
+     * @param LengthAwarePaginator $currency
      */
-    public function setCountry(LengthAwarePaginator $country): void
+    public function setCurrency(LengthAwarePaginator $currency): void
     {
-        $this->country = $country;
+        $this->currency = $currency;
     }
     
     

@@ -9,45 +9,61 @@
 namespace WebAppId\Country\Services;
 
 
-use Illuminate\Container\Container;
 use WebAppId\Country\Models\Country;
 use WebAppId\Country\Repositories\CountryRepository;
+use WebAppId\Country\Responses\CountryResponse;
 use WebAppId\Country\Responses\CountrySearchResponse;
 use WebAppId\Country\Services\Params\CountryParam;
+use WebAppId\DDD\Services\BaseService;
 
 /**
  * Class CountryService
  * @package WebAppId\Country\Services
  */
-class CountryService
+class CountryService extends BaseService
 {
-    private $container;
-    
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-    
     /**
      * @param CountryParam $countryParam
      * @param CountryRepository $countryRepository
-     * @return Country|null
+     * @param CountryResponse $countryResponse
+     * @return CountryResponse
      */
     public function store(CountryParam $countryParam,
-                          CountryRepository $countryRepository): ?Country
+                          CountryRepository $countryRepository,
+                          CountryResponse $countryResponse): CountryResponse
     {
-        return $this->container->call([$countryRepository, 'store'], ['countryParam' => $countryParam]);
+        $result =  $this->getContainer()->call([$countryRepository, 'store'], ['countryParam' => $countryParam]);
+        if ($result != null) {
+            $countryResponse->setStatus(true);
+            $countryResponse->setMessage('Update Country Success');
+            $countryResponse->setCountry($result);
+        } else {
+            $countryResponse->setStatus(false);
+            $countryResponse->setMessage('Update Country Failed');
+        }
+        return $countryResponse;
     }
     
     /**
      * @param string $code
      * @param CountryRepository $countryRepository
-     * @return object|null
+     * @param CountryResponse $countryResponse
+     * @return CountryResponse
      */
     public function getByCode(string $code,
-                                     CountryRepository $countryRepository): ?object
+                              CountryRepository $countryRepository,
+                              CountryResponse $countryResponse): CountryResponse
     {
-        return $this->container->call([$countryRepository, 'getByCode'], ['code' => $code]);
+        $result =  $this->getContainer()->call([$countryRepository, 'getByCode'], ['code' => $code]);
+        if ($result != null) {
+            $countryResponse->setStatus(true);
+            $countryResponse->setMessage('Update Country Success');
+            $countryResponse->setCountry($result);
+        } else {
+            $countryResponse->setStatus(false);
+            $countryResponse->setMessage('Update Country Failed');
+        }
+        return $countryResponse;
     }
     
     /**
@@ -57,10 +73,10 @@ class CountryService
      * @return object|null
      */
     public function getLike(string $q,
-                                   CountryRepository $countryRepository,
-                                   CountrySearchResponse $countrySearchResponse): ?CountrySearchResponse
+                            CountryRepository $countryRepository,
+                            CountrySearchResponse $countrySearchResponse): ?CountrySearchResponse
     {
-        $result = $this->container->call([$countryRepository, 'getLike'], ['search' => $q]);
+        $result = $this->getContainer()->call([$countryRepository, 'getLike'], ['search' => $q]);
         if (count($result) == 0) {
             $countrySearchResponse->setStatus(false);
             $countrySearchResponse->setMessage('Data Not Found');
@@ -76,12 +92,22 @@ class CountryService
      * @param string $code
      * @param CountryParam $countryParam
      * @param CountryRepository $countryRepository
+     * @param CountryResponse $countryResponse
      * @return Country|null
      */
     public function updateCountry(string $code,
                                   CountryParam $countryParam,
-                                  CountryRepository $countryRepository): ?Country
+                                  CountryRepository $countryRepository, CountryResponse $countryResponse): ?CountryResponse
     {
-        return $this->container->call([$countryRepository, 'updateByCode'], ['addCountryParam' => $countryParam, 'code' => $code]);
+        $result = $this->getContainer()->call([$countryRepository, 'updateByCode'], ['countryParam' => $countryParam, 'code' => $code]);
+        if ($result != null) {
+            $countryResponse->setStatus(true);
+            $countryResponse->setMessage('Update Country Success');
+            $countryResponse->setCountry($result);
+        } else {
+            $countryResponse->setStatus(false);
+            $countryResponse->setMessage('Update Country Failed');
+        }
+        return $countryResponse;
     }
 }

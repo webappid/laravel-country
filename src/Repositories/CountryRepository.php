@@ -51,7 +51,7 @@ class CountryRepository implements CountryRepositoryContract
      * @param string $search
      * @param Country $country
      * @param int $paging
-     * @return object|null
+     * @return LengthAwarePaginator
      */
     public function getLike(string $search,
                                    Country $country,
