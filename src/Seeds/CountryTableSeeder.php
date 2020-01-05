@@ -20,7 +20,7 @@ class CountryTableSeeder extends Seeder
                         CountryParam $addCountryParam)
     {
         $file = __DIR__ . '/../Resources/Csv/country.csv';
-        $header = array('id', 'code', 'name', 'currency_id', 'continent', 'wikipedia_link', 'keywords', 'created_at','updated_at');
+        $header = array('id', 'code', 'name', 'currency_id', 'continent', 'wikipedia_link', 'keywords', 'created_at', 'updated_at');
         $datas = $csvToArray->convert($file, $header);
         DB::beginTransaction();
         foreach ($datas as $data) {
@@ -28,7 +28,7 @@ class CountryTableSeeder extends Seeder
                 $addCountryParam->setId($data['id']);
                 $addCountryParam->setCode($data['code']);
                 $addCountryParam->setName($data['name']);
-                $addCountryParam->setCurrencyId((int)$data['currency_id']);
+                $addCountryParam->setCurrencyId((int)$data['currency_id'] <> 0 ? (int)$data['currency_id'] : null);
                 $addCountryParam->setWikipediaLink($data['wikipedia_link']);
                 $addCountryParam->setKeywords($data['keywords']);
                 $result = $this->container->call([$countryRepository, 'getByCode'], ['code' => $data['code']]);
@@ -40,6 +40,6 @@ class CountryTableSeeder extends Seeder
             }
         }
         DB::commit();
-        
+
     }
 }
