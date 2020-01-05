@@ -143,7 +143,7 @@ class CountryParam
     /**
      * @return int
      */
-    public function getCurrencyId(): int
+    public function getCurrencyId(): ?int
     {
         return $this->currency_id;
     }
@@ -151,7 +151,7 @@ class CountryParam
     /**
      * @param int $currency_id
      */
-    public function setCurrencyId(int $currency_id): void
+    public function setCurrencyId(?int $currency_id): void
     {
         $this->currency_id = $currency_id;
     }
